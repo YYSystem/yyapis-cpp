@@ -1,0 +1,11 @@
+{
+  "files.associations": {
+    "iostream": "cpp",
+    "__config": "c",
+    "__locale": "cpp",
+    "ostream": "cpp",
+    "memory": "cpp",
+    "chrono": "cpp"
+  },
+  "C_Cpp.errorSquiggles": "Disabled"
+}
