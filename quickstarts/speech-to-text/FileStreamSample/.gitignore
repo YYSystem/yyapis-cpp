@@ -1,0 +1,5 @@
+vcpkg/
+protos/*
+resources/
+!resources/sample.wav
+.vscode/
