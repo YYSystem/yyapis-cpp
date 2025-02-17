@@ -80,6 +80,10 @@ static void MicrophoneThreadMain(
 }
 
 
+void ShowResponse(string response){
+  cout << "response: " << response <<endl;
+}
+
 class YYSystemClient {
   public:
     YYSystemClient(shared_ptr<Channel> channel): stub_(YYSpeech::NewStub(channel)) {};
@@ -99,6 +103,7 @@ class YYSystemClient {
           cerr << "  details: " << response.error().details() << endl;
           cerr << "}" << endl;
         }
+        ShowResponse(response.result().transcript());
         while (streamer->Read(&response))
         {
           cout << "response event" << endl;
@@ -117,7 +122,6 @@ class YYSystemClient {
               const auto& wordInfo = response.result().words(r);
               cout << "response.result.words[" << r << "].word: "<< wordInfo.word() << endl;
             }
-            cout << "response.result.transcript: " << response.result().transcript() << endl;
           }
           if (request.streaming_config().enable_interim_results() && !response.result().is_final())
           {
