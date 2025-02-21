@@ -49,7 +49,7 @@ static const char kUsage[] =
 static void MicrophoneThreadMain(shared_ptr<ClientReaderWriterInterface<StreamRequest, StreamResponse>> streamer, StreamRequest& request, atomic<bool>& stream_complete){
   PaError err;
   PaStream *stream;
-  const size_t chunk_size = 3200;
+  const size_t chunk_size = 10000000;
   vector<char> chunk(chunk_size);
 
   //PortAudioの初期化
@@ -75,7 +75,7 @@ static void MicrophoneThreadMain(shared_ptr<ClientReaderWriterInterface<StreamRe
     stream_complete = true;
     return;
   }else{
-    std::cerr << "defaultLowInputLatency: " << deviceInfo->defaultLowInputLatency << std::endl;
+    // std::cerr << "defaultLowInputLatency: " << deviceInfo->defaultLowInputLatency << std::endl;
   }
 
   //マイク入力音声のパラメータ設定
@@ -104,8 +104,16 @@ static void MicrophoneThreadMain(shared_ptr<ClientReaderWriterInterface<StreamRe
   }
 
   //ストリーム開始
+  err = Pa_StartStream(stream);
+  if (err != paNoError) {
+    std::cerr << "PortAudio stream start error: " << Pa_GetErrorText(err) << Pa_Terminate();
+    stream_complete = true;
+    return;
+  }
   while(!stream_complete){
     err = Pa_ReadStream(stream, &chunk[0], chunk_size / 2);
+    cerr << "IsStreamActive: " << Pa_IsStreamActive(stream) << endl;
+    cerr << "GetStreamInfo: " << Pa_GetStreamInfo(stream) << endl;
     if(err != paNoError){
       cerr << "PortAudio stream read error: " << Pa_GetErrorText(err) << endl;
       break;
@@ -167,7 +175,7 @@ void ShowResponse(string response){
 class YYSystemClient {
   public:
     YYSystemClient(shared_ptr<Channel> channel): stub_(YYSpeech::NewStub(channel)) {};
-    void RecognizeStream(grpc::ClientContext& context, StreamRequest& request, char* file_path) {
+    void RecognizeStream(grpc::ClientContext& context, StreamRequest& request) {
       shared_ptr<ClientReaderWriter<StreamRequest, StreamResponse>> streamer(stub_->RecognizeStream(&context));
       streamer->Write(request);
       atomic<bool> stream_complete(false);
@@ -233,13 +241,13 @@ int main(int argc, char** argv)
   context.AddMetadata("yyapis-stream-end-timeout-ms", "1000"); // 1 second
   StreamRequest request;
   StreamingConfig* streaming_config = request.mutable_streaming_config();
-  char* file_path = ParseArguments(argc, argv, streaming_config);
-  if (nullptr == file_path)
-  {
-    cerr << kUsage;
-    return -1;
-  }
+  // char* file_path = ParseArguments(argc, argv, streaming_config);
+  // if (nullptr == file_path)
+  // {
+  //   cerr << kUsage;
+  //   return -1;
+  // }
   YYSystemClient client(CreateChannel(getTarget(), getCredentials()));
-  client.RecognizeStream(context, request, file_path);
+  client.RecognizeStream(context, request);
   return 0;
 }

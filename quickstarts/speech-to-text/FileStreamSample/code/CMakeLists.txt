@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.22.1)
 
 project(Speech C CXX)
-message(STATUS "PROJECT_NAME: ${PROJECT_NAME}")
+# message(STATUS "PROJECT_NAME: ${PROJECT_NAME}")
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -9,8 +9,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 if(NOT DEFINED CMAKE_TOOLCHAIN_FILE)
     set(CMAKE_TOOLCHAIN_FILE "${CMAKE_CURRENT_LIST_DIR}/../vcpkg/scripts/buildsystems/vcpkg.cmake")
 endif()
-
-include_directories(${CMAKE_CURRENT_LIST_DIR}/vcpkg_installed/arm64-osx/include)
 
 get_filename_component(proto "../protos/yysystem.proto" ABSOLUTE)
 get_filename_component(proto_path "${proto}" DIRECTORY)
@@ -28,7 +26,7 @@ set(_NLOHMANN_JSON_NLOHMANN_JSON nlohmann_json::nlohmann_json)
 # message(STATUS "_REFLECTION: ${_REFLECTION}")
 # message(STATUS "_NLOHMANN_JSON_NLOHMANN_JSON: ${_NLOHMANN_JSON_NLOHMANN_JSON}")
 
-find_package(Threads)
+# find_package(Threads)
 find_package(portaudio CONFIG REQUIRED)
 find_package(gRPC CONFIG REQUIRED)
 find_package(Protobuf CONFIG REQUIRED)
@@ -90,32 +88,9 @@ target_link_libraries(parse_arguments PUBLIC
 )
 
 add_executable(${PROJECT_NAME} speech.cc)
-add_library(speech portaudio.h)
 target_link_libraries(${PROJECT_NAME}
   PRIVATE
+    portaudio_static
     parse_arguments
     config
-    Threads::Threads
-    portaudio
 )
-  # target_link_libraries(${PROJECT_NAME}
-  #   PRIVATE
-  #     parse_arguments
-  #     config
-  #     Threads::Threads
-  #     gRPC::grpc++
-  #     protobuf::libprotobuf
-  #     ${PORTAUDIO_LIBRARIES})
-# if(PORTAUDIO_FOUND) # PORTAUDIO_FOUND が真の場合のみ以下を実行
-# target_link_libraries(${PROJECT_NAME}
-#     PRIVATE
-#       parse_arguments
-#       config
-#       Threads::Threads
-#       gRPC::grpc++
-#       protobuf::libprotobuf
-#       ${PORTAUDIO_LIBRARIES}
-# )
-# else()
-#   message(FATAL_ERROR "portaudio not found") # portaudio が見つからない場合はエラー
-# endif()
