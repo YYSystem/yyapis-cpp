@@ -15,7 +15,7 @@ using grpc::InsecureChannelCredentials;
 using grpc::SslCredentials;
 using grpc::SslCredentialsOptions;
 
-static const string apiKey = "YOUR API KEY";
+static const string apiKey = "CavV9LR4ang3pqzui81EZni4XAcY4vyW";
 static const string encoding = "LINEAR16";
 static const int sampleRateHertz = 16000;
 static const int languageCode = 4;
@@ -23,7 +23,6 @@ static const int model = 10;
 static const bool enableWord = false;
 static const bool enableInterimResults = true;
 static const int audioChannelCount = 1;
-// static const long deadlineMilliseconds = 10*1000;
 enum Endpoint { Production };
 static const vector<string> endpoints = {
   "api-grpc-2.yysystem2021.com"

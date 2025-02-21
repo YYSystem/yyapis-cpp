@@ -3,14 +3,14 @@ cmake_minimum_required(VERSION 3.22.1)
 project(Speech C CXX)
 message(STATUS "PROJECT_NAME: ${PROJECT_NAME}")
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 if(NOT DEFINED CMAKE_TOOLCHAIN_FILE)
     set(CMAKE_TOOLCHAIN_FILE "${CMAKE_CURRENT_LIST_DIR}/../vcpkg/scripts/buildsystems/vcpkg.cmake")
 endif()
 
-find_package(Threads)
+include_directories(${CMAKE_CURRENT_LIST_DIR}/vcpkg_installed/arm64-osx/include)
 
 get_filename_component(proto "../protos/yysystem.proto" ABSOLUTE)
 get_filename_component(proto_path "${proto}" DIRECTORY)
@@ -18,7 +18,6 @@ get_filename_component(proto_path "${proto}" DIRECTORY)
 # message(STATUS "proto_path: ${proto_path}")
 
 set(protobuf_MODULE_COMPATIBLE TRUE)
-
 set(_GRPC_GRPCPP gRPC::grpc++)
 # message(STATUS "_GRPC_GRPCPP: ${_GRPC_GRPCPP}")
 
@@ -29,12 +28,18 @@ set(_NLOHMANN_JSON_NLOHMANN_JSON nlohmann_json::nlohmann_json)
 # message(STATUS "_REFLECTION: ${_REFLECTION}")
 # message(STATUS "_NLOHMANN_JSON_NLOHMANN_JSON: ${_NLOHMANN_JSON_NLOHMANN_JSON}")
 
+find_package(Threads)
+find_package(portaudio CONFIG REQUIRED)
 find_package(gRPC CONFIG REQUIRED)
 find_package(Protobuf CONFIG REQUIRED)
 find_package(nlohmann_json CONFIG REQUIRED)
 # message(STATUS "Using gRPC ${gRPC_VERSION}")
 # message(STATUS "Using protobuf ${Protobuf_VERSION}")
 # message(STATUS "Using nlohmann_json ${nlohmann_json_VERSION}")
+# message(STATUS "Using Threads ${threads_VERSION}")
+message(STATUS "Using portaudio ${portaudio_VERSION}")
+message(STATUS "PORTAUDIO_INCLUDE_DIRS: ${PORTAUDIO_INCLUDE_DIRS}")
+message(STATUS "PORTAUDIO_LIBRARIES: ${PORTAUDIO_LIBRARIES}")
 
 find_program(_PROTOBUF_PROTOC protoc)
 find_program(_GRPC_CPP_PLUGIN_EXECUTABLE grpc_cpp_plugin)
@@ -85,9 +90,32 @@ target_link_libraries(parse_arguments PUBLIC
 )
 
 add_executable(${PROJECT_NAME} speech.cc)
+add_library(speech portaudio.h)
 target_link_libraries(${PROJECT_NAME}
   PRIVATE
     parse_arguments
     config
     Threads::Threads
+    portaudio
 )
+  # target_link_libraries(${PROJECT_NAME}
+  #   PRIVATE
+  #     parse_arguments
+  #     config
+  #     Threads::Threads
+  #     gRPC::grpc++
+  #     protobuf::libprotobuf
+  #     ${PORTAUDIO_LIBRARIES})
+# if(PORTAUDIO_FOUND) # PORTAUDIO_FOUND が真の場合のみ以下を実行
+# target_link_libraries(${PROJECT_NAME}
+#     PRIVATE
+#       parse_arguments
+#       config
+#       Threads::Threads
+#       gRPC::grpc++
+#       protobuf::libprotobuf
+#       ${PORTAUDIO_LIBRARIES}
+# )
+# else()
+#   message(FATAL_ERROR "portaudio not found") # portaudio が見つからない場合はエラー
+# endif()
