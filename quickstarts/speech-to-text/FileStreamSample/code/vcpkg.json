@@ -1,3 +1,9 @@
 {
-  "dependencies": ["nlohmann-json", "grpc", "portaudio", "protobuf"]
+  "dependencies": [
+    "fmt",
+    "nlohmann-json",
+    "grpc",
+    "portaudio",
+    "protobuf"
+  ]
 }

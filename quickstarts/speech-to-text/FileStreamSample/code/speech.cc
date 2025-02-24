@@ -49,7 +49,7 @@ static const char kUsage[] =
 static void MicrophoneThreadMain(shared_ptr<ClientReaderWriterInterface<StreamRequest, StreamResponse>> streamer, StreamRequest& request, atomic<bool>& stream_complete){
   PaError err;
   PaStream *stream;
-  const size_t chunk_size = 10000000;
+  const size_t chunk_size = 3200;
   vector<char> chunk(chunk_size);
 
   //PortAudioの初期化
