@@ -1,0 +1,8 @@
+{
+  "dependencies": [
+    "fmt",
+    "portaudio",
+    "grpc",
+    "nlohmann-json"
+  ]
+}
