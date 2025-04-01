@@ -1,7 +1,9 @@
 cmake_minimum_required(VERSION 3.22.1)
 
-project(Speech C CXX)
-# message(STATUS "PROJECT_NAME: ${PROJECT_NAME}")
+set(CMAKE_TOOLCHAIN_FILE "${CMAKE_SOURCE_DIR}/../vcpkg/scripts/buildsystems/vcpkg.cmake")
+set(CMAKE_USE_SYSTEM_ENVIRONMENT_PATH ON)
+
+project(audio-classification)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -10,14 +12,8 @@ if(NOT DEFINED CMAKE_TOOLCHAIN_FILE)
     set(CMAKE_TOOLCHAIN_FILE "${CMAKE_CURRENT_LIST_DIR}/../vcpkg/scripts/buildsystems/vcpkg.cmake")
 endif()
 
-get_filename_component(proto "../protos/yysystem.proto" ABSOLUTE)
+get_filename_component(proto "../protos/yysystem.audioclassification.proto" ABSOLUTE)
 get_filename_component(proto_path "${proto}" DIRECTORY)
-# message(STATUS "proto: ${proto}")
-# message(STATUS "proto_path: ${proto_path}")
-
-set(protobuf_MODULE_COMPATIBLE TRUE)
-set(_GRPC_GRPCPP gRPC::grpc++)
-# message(STATUS "_GRPC_GRPCPP: ${_GRPC_GRPCPP}")
 
 set(_PROTOBUF_LIBPROTOBUF protobuf::libprotobuf)
 set(_REFLECTION gRPC::grpc++_reflection)
@@ -26,7 +22,6 @@ set(_NLOHMANN_JSON_NLOHMANN_JSON nlohmann_json::nlohmann_json)
 # message(STATUS "_REFLECTION: ${_REFLECTION}")
 # message(STATUS "_NLOHMANN_JSON_NLOHMANN_JSON: ${_NLOHMANN_JSON_NLOHMANN_JSON}")
 
-# find_package(Threads)
 find_package(portaudio CONFIG REQUIRED)
 find_package(gRPC CONFIG REQUIRED)
 find_package(Protobuf CONFIG REQUIRED)
@@ -44,10 +39,10 @@ find_program(_GRPC_CPP_PLUGIN_EXECUTABLE grpc_cpp_plugin)
 # message(STATUS "_PROTOBUF_PROTOC: ${_PROTOBUF_PROTOC}")
 # message(STATUS "_GRPC_CPP_PLUGIN_EXECUTABLE: ${_GRPC_CPP_PLUGIN_EXECUTABLE}")
 
-set(proto_srcs "${CMAKE_CURRENT_BINARY_DIR}/yysystem.pb.cc")
-set(proto_hdrs "${CMAKE_CURRENT_BINARY_DIR}/yysystem.pb.h")
-set(grpc_srcs "${CMAKE_CURRENT_BINARY_DIR}/yysystem.grpc.pb.cc")
-set(grpc_hdrs "${CMAKE_CURRENT_BINARY_DIR}/yysystem.grpc.pb.h")
+set(proto_srcs "${CMAKE_CURRENT_BINARY_DIR}/yysystem.audioclassification.pb.cc")
+set(proto_hdrs "${CMAKE_CURRENT_BINARY_DIR}/yysystem.audioclassification.pb.h")
+set(grpc_srcs "${CMAKE_CURRENT_BINARY_DIR}/yysystem.audioclassification.grpc.pb.cc")
+set(grpc_hdrs "${CMAKE_CURRENT_BINARY_DIR}/yysystem.audioclassification.grpc.pb.h")
 add_custom_command(
   OUTPUT "${proto_srcs}" "${proto_hdrs}" "${grpc_srcs}" "${grpc_hdrs}"
   COMMAND ${_PROTOBUF_PROTOC}
@@ -79,18 +74,10 @@ target_link_libraries(config PUBLIC
   ${_NLOHMANN_JSON_NLOHMANN_JSON}
 )
 
-add_library(parse_arguments STATIC
-  parse_arguments.cc
-  parse_arguments.h
-)
-target_link_libraries(parse_arguments PUBLIC
-  config
-)
-
-add_executable(${PROJECT_NAME} speech.cc)
+add_executable(${PROJECT_NAME} audioclassification.cc)
 target_link_libraries(${PROJECT_NAME}
   PRIVATE
     portaudio_static
-    parse_arguments
+    # thread
     config
 )

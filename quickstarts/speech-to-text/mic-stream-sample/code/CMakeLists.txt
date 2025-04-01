@@ -1,7 +1,9 @@
 cmake_minimum_required(VERSION 3.22.1)
 
-project(Speech C CXX)
-# message(STATUS "PROJECT_NAME: ${PROJECT_NAME}")
+set(CMAKE_TOOLCHAIN_FILE "${CMAKE_SOURCE_DIR}/../vcpkg/scripts/buildsystems/vcpkg.cmake")
+set(CMAKE_USE_SYSTEM_ENVIRONMENT_PATH ON)
+
+project(speech)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -12,12 +14,6 @@ endif()
 
 get_filename_component(proto "../protos/yysystem.proto" ABSOLUTE)
 get_filename_component(proto_path "${proto}" DIRECTORY)
-# message(STATUS "proto: ${proto}")
-# message(STATUS "proto_path: ${proto_path}")
-
-set(protobuf_MODULE_COMPATIBLE TRUE)
-set(_GRPC_GRPCPP gRPC::grpc++)
-# message(STATUS "_GRPC_GRPCPP: ${_GRPC_GRPCPP}")
 
 set(_PROTOBUF_LIBPROTOBUF protobuf::libprotobuf)
 set(_REFLECTION gRPC::grpc++_reflection)
@@ -26,7 +22,6 @@ set(_NLOHMANN_JSON_NLOHMANN_JSON nlohmann_json::nlohmann_json)
 # message(STATUS "_REFLECTION: ${_REFLECTION}")
 # message(STATUS "_NLOHMANN_JSON_NLOHMANN_JSON: ${_NLOHMANN_JSON_NLOHMANN_JSON}")
 
-# find_package(Threads)
 find_package(portaudio CONFIG REQUIRED)
 find_package(gRPC CONFIG REQUIRED)
 find_package(Protobuf CONFIG REQUIRED)
@@ -79,18 +74,9 @@ target_link_libraries(config PUBLIC
   ${_NLOHMANN_JSON_NLOHMANN_JSON}
 )
 
-add_library(parse_arguments STATIC
-  parse_arguments.cc
-  parse_arguments.h
-)
-target_link_libraries(parse_arguments PUBLIC
-  config
-)
-
 add_executable(${PROJECT_NAME} speech.cc)
 target_link_libraries(${PROJECT_NAME}
   PRIVATE
     portaudio_static
-    parse_arguments
     config
 )

@@ -1,4 +1,4 @@
-# YYAPIs speech-to-text C++ FileStreamSample サンプル コンソールアプリ
+# YYAPIs speech-to-text C++ mic-stream-sample サンプル コンソールアプリ
 
 ## 事前準備
 
@@ -19,10 +19,10 @@ git clone https://github.com/YYSystem/yyapis-cpp.git
 2. clone したプロジェクトのディレクトリを移動します。
 
 ```bash
-cd yyapis-cpp/quickstarts/speech-to-text/FileStreamSample
+cd yyapis-cpp/quickstarts/speech-to-text/mic-stream-sample
 ```
 
-3. `FileStreamSample` の直下に `protos` を作成します。
+3. `mic-stream-sample` の直下に `protos` を作成します。
 
 ```bash
 mkdir protos
@@ -31,7 +31,7 @@ mkdir protos
 4. YYAPIs 開発者コンソールから音響認識 API の proto ファイル(`yysystem.proto`)をダウンロードして、 `protos` ディレクトリを配置します。
 
 ```bash
-yyapis-cpp/quickstarts/speech-to-text/FileStreamSample/protos/yysytem.proto # ← ここに配置する
+yyapis-cpp/quickstarts/speech-to-text/mic-stream-sample/protos/yysytem.proto # ← ここに配置する
 ```
 
 ## API キーの設定
@@ -53,7 +53,7 @@ brew install cmake
 2. git を使用して、vcpkg をインストールします。
 
 ```bash
-cd yyapis-cpp/quickstarts/speech-to-text/FileStreamSample
+cd yyapis-cpp/quickstarts/speech-to-text/mic-stream-sample
 git clone https://github.com/microsoft/vcpkg.git
 ```
 

@@ -63,7 +63,7 @@ cd vcpkg && ./bootstrap-vcpkg.sh
 
 4. `vi ./~zshrc` で .zshrc ファイルを開いて、vcpkg の PATH を通します。
 
-```./~zshrc
+```~/.zshrc
 export VCPKG_ROOT=/path/to/vcpkg
 export PATH=$VCPKG_ROOT:$PATH
 ```
