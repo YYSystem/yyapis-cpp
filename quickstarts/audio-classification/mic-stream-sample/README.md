@@ -7,6 +7,7 @@
 - [<u>サンプルデータのデプロイ</u>](https://github.com/YYSystem/yyapis-docs/wiki/ClassifyStream) - サンプルデータのデプロイまで終わらせてください。
 - [<u>gcc g++</u>](https://gcc.gnu.org/) (推奨バージョン 14.2) - brewなどでインストールしてください。
 - [<u>Homebrew</u>](https://brew.sh/ja/) - パッケージマネージャ
+- [<u>Ninja</u>](https://ninja-build.org/) - brewでインストールしてください。
 
 
 ## サンプルコードのダウンロード

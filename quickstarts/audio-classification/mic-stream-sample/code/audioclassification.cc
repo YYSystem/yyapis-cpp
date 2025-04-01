@@ -47,32 +47,32 @@ static void MicrophoneThread(shared_ptr<ClientReaderWriterInterface<ClassifyStre
     //PortAudioの初期化
     err = Pa_Initialize();
     if(err != paNoError){
-        std::cerr << "PortAudio initialization failed: " << Pa_GetErrorText(err) << std::endl;
+        cout << "PortAudio initialization failed: " << Pa_GetErrorText(err) << endl;
         stream_complete = true;
         return;
     }else{
-        std::cout << "Success: PortAudio initialization Succeed" << std::endl;
+        cout << "Success: PortAudio initialization Succeed" << endl;
     }
 
     //マイクデバイスのインデックスの取得
     PaDeviceIndex deviceIndex = Pa_GetDefaultInputDevice();
     if(deviceIndex == paNoDevice){
-        std::cerr << "Error: No default input device found." << std::endl;
+        cout << "Error: No default input device found." << endl;
         stream_complete = true;
         return;
     }else{
-        std::cout << "Success: default input device found." << std::endl;
+        cout << "Success: default input device found." << endl;
     }
 
     //マイクデバイスの情報の取得
     const PaDeviceInfo* deviceInfo = Pa_GetDeviceInfo(deviceIndex);
     if(deviceInfo == nullptr){
-        std::cerr << "Error: Could not get info." << std::endl;
+        cout << "Error: Could not get info." << endl;
         Pa_Terminate();
         stream_complete = true;
         return;
     }else{
-        std::cout << "Success: Could get info." << std::endl;
+        cout << "Success: Could get info." << endl;
     }
 
     //マイク入力音声のパラメータ設定
@@ -95,23 +95,23 @@ static void MicrophoneThread(shared_ptr<ClientReaderWriterInterface<ClassifyStre
         &streamer
     );
     if (err != paNoError) {
-        std::cerr << "PortAudio stream open error: " << Pa_GetErrorText(err) << Pa_Terminate();
+        cout << "PortAudio stream open error: " << Pa_GetErrorText(err) << Pa_Terminate() << endl;
         stream_complete = true;
         return;
     }else{
-        std::cout << "Success: PortAudio stream open" << std::endl;
+        cout << "Success: PortAudio stream open" << endl;
     }
 
     //ストリーム開始
     err = Pa_StartStream(stream);
     if (err != paNoError) {
-        std::cerr << "PortAudio stream start error: " << Pa_GetErrorText(err) << Pa_Terminate();
+        cout << "PortAudio stream start error: " << Pa_GetErrorText(err) << Pa_Terminate() <<endl;
         stream_complete = true;
         return;
     }else{
-        std::cout << "Success: PortAudio stream start" << std::endl;
-        cerr << "   IsStreamActive: " << Pa_IsStreamActive(stream) << endl;
-        cerr << "   GetStreamInfo: " << Pa_GetStreamInfo(stream) << endl;
+        cout << "Success: PortAudio stream start" << endl;
+        cout << "   IsStreamActive: " << Pa_IsStreamActive(stream) << endl;
+        cout << "   GetStreamInfo: " << Pa_GetStreamInfo(stream) << endl;
     }
 
     //ストリームの読み込みと書き込み
@@ -119,7 +119,7 @@ static void MicrophoneThread(shared_ptr<ClientReaderWriterInterface<ClassifyStre
     while(!stream_complete){
         err = Pa_ReadStream(stream, chunk.data(), chunk_size/2);
         if(!streamer -> Write(request)){
-            cerr << "Error writing to stream." << endl;
+            cout << "Error writing to stream." << endl;
             break;
         }
 
@@ -127,7 +127,7 @@ static void MicrophoneThread(shared_ptr<ClientReaderWriterInterface<ClassifyStre
         ClassifyStreamRequest request;
         request.set_audiobytes(chunk.data(), chunk_size);
         if (!streamer->Write(request)) {
-            cerr << "Error writing to stream." << endl;
+            cout << "Error writing to stream." << endl;
             break;
         }else{
             if(firstMessage){
@@ -150,7 +150,7 @@ static void MicrophoneThread(shared_ptr<ClientReaderWriterInterface<ClassifyStre
 
     //終了メッセージ
     stream_complete = true;
-    std::cout << "Microphone thread finished." << std::endl;
+    cout << "Microphone thread finished." << endl;
 
     return;
 }

@@ -5,7 +5,7 @@
         "name": "default",
         "inherits": "vcpkg",
         "environment": {
-          "VCPKG_ROOT": "/Users/saitoukouki/yyapis-cpp/quickstarts/audio-classification/mic-stream-sample/vcpkg"
+          "VCPKG_ROOT": "${sourceDir}/../vcpkg"
         }
       }
     ]
