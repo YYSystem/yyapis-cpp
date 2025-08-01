@@ -41,33 +41,39 @@ yyapis-cpp/quickstarts/speech-to-text/FileStreamSample/protos/yysytem.proto # �
 static const string apiKey = "YOUR API KEY";
 ```
 
-## CMake と　vcpkg のインストール
+## vcpkg のインストール
 
-1. brew を使用して、CMake をインストールします。
-
-```bash
-cd
-brew install cmake
-```
-
-2. git を使用して、vcpkg をインストールします。
+1. git を使用して、vcpkg をインストールします。
 
 ```bash
 cd yyapis-cpp/quickstarts/speech-to-text/FileStreamSample
 git clone https://github.com/microsoft/vcpkg.git
 ```
 
-3. bootstrap スクリプトを実行します。
+2. bootstrap スクリプトを実行します。
 
 ```bash
 cd vcpkg && ./bootstrap-vcpkg.sh
 ```
 
-4. `vi ./~zshrc` で .zshrc ファイルを開いて、vcpkg の PATH を通します。
+3. `vi ./~zshrc` で .zshrc ファイルを開いて、vcpkg の PATH を通します。
 
 ```~/.zshrc
 export VCPKG_ROOT=/path/to/vcpkg
 export PATH=$VCPKG_ROOT:$PATH
+```
+
+```bash
+source ~/.zshrc
+```
+
+## Cmake と Ninja をインストール
+
+1. brew を使用して、CMake と Ninja をインストールします。
+
+```bash
+cd
+brew install cmake ninja
 ```
 
 ## ライブラリのインストール
