@@ -1,2 +1,4 @@
 build/
 vcpkg_installed/
+resources/*.wav
+!resources/sample.wav
